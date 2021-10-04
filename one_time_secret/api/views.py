@@ -27,15 +27,15 @@ class SecretDetail(APIView):
 
     def get(self, request, password, format=None):
         secret = self.get_object(password)
-        serializer = ShowSecretSerializer(secret)
+        serializer = SecretSerializer(secret)
         if secret.password == password:
             return Response(serializer.data)
         return JsonResponse(serializer.errors, status=401)
 
     def delete(self, request, password, format=None):
         secret = self.get_object(password)
-        serializer = ShowSecretSerializer(secret)
         if secret.password == password:
             secret.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return JsonResponse(serializer.errors, status=401)
+        response = {'password_error': 'Неправильное кодовое слово'}
+        return JsonResponse(response, status=401)
